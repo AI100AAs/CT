@@ -232,8 +232,11 @@ function bootstrap() {
   function downloadOutput() {
     const text = outputText();
     if (!text || text.startsWith("// translated code")) { setStatus("NOTHING TO DOWNLOAD. Run a translation first."); return; }
-    const extension = { "C++": "cpp", Rust: "rs", Go: "go", Java: "java", TypeScript: "ts" }[targetLanguage.value] || "txt";
-    const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([text], { type: "text/plain" })); link.download = `translated-${targetLanguage.value.toLowerCase()}.${extension}`; link.click(); URL.revokeObjectURL(link.href);
+    const fileTypes = {
+      Python: ["python", "py"], JavaScript: ["javascript", "js"], TypeScript: ["typescript", "ts"], Java: ["java", "java"], Go: ["go", "go"], Rust: ["rust", "rs"], "C++": ["cpp", "cpp"], "C#": ["csharp", "cs"], Ruby: ["ruby", "rb"], PHP: ["php", "php"], Swift: ["swift", "swift"], Kotlin: ["kotlin", "kt"], SQL: ["sql", "sql"], Bash: ["bash", "sh"],
+    };
+    const [languageName, extension] = fileTypes[targetLanguage.value] || ["translation", "txt"];
+    const link = document.createElement("a"); link.href = URL.createObjectURL(new Blob([text], { type: "text/plain" })); link.download = `translated-${languageName}.${extension}`; link.click(); URL.revokeObjectURL(link.href);
     setStatus("DOWNLOAD READY. Your translated code is saved locally.");
   }
 
