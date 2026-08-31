@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+    <title>TRANSPILE//AI v1.0</title>
+    <meta name="description" content="Translate code between languages with an AI pair programmer.">
+    <meta name="theme-color" content="#050805">
+    <base href="{{ base_href }}">
+    <link rel="icon" href="{{ icon_url }}" sizes="192x192">
+    <link rel="stylesheet" href="{{ shared_asset_base }}base.css">
+    <link rel="stylesheet" href="{{ asset_base }}styles.css">
+  </head>
+  <body class="shell-body text-shell-body">
+    <div class="app-frame public-frame text-frame">
+      <main class="text-workspace" aria-label="Transpile AI workspace">
+        <header class="app-topbar">
+          <a class="brand-mark" href="{{ base_href }}" aria-label="Transpile AI home">&gt;_</a>
+          <div class="brand-copy">
+            <p class="shell-kicker">AI CODE MIGRATION LAB / v1.0</p>
+            <h1>transpile<span>//</span>ai</h1>
+          </div>
+             <div class="app-actions">
+               <button class="command-button" id="theme-button" type="button" aria-pressed="false">LIGHT MODE</button>
+             <button class="command-button" id="clear-button" type="button">CLEAR SESSION</button>
+          </div>
+        </header>
+
+        <section class="hero-line">
+          <div>
+            <p class="eyebrow">SOURCE → TARGET // EXPLAIN EVERYTHING</p>
+            <h2>Rewrite code.<br><em>Understand why.</em></h2>
+          </div>
+          <p class="hero-note">Drop in a function, choose your target, and get idiomatic code with the language differences annotated inline.</p>
+        </section>
+
+        <section class="workspace-panel primary-panel" aria-label="Code translator">
+          <div class="translator-toolbar">
+            <div class="language-picker">
+              <label for="source-language">FROM</label>
+              <select id="source-language">
+                 <option>Python</option><option>JavaScript</option><option>TypeScript</option><option>Java</option><option>Go</option><option>Rust</option><option>C++</option><option>C#</option><option>Ruby</option><option>PHP</option><option>Swift</option><option>Kotlin</option><option>SQL</option><option>Bash</option>
+              </select>
+            </div>
+            <div class="transfer-mark" aria-hidden="true">→</div>
+            <div class="language-picker">
+              <label for="target-language">TO</label>
+              <select id="target-language">
+                <option>C++</option><option>Python</option><option>JavaScript</option><option>TypeScript</option><option>Java</option><option>Go</option><option>Rust</option><option>C#</option><option>Ruby</option><option>PHP</option><option>Swift</option><option>Kotlin</option><option>SQL</option><option>Bash</option>
+              </select>
+            </div>
+            <span class="toolbar-hint">// comments enabled by default</span>
+             <button class="translate-button" id="translate-button" type="button"><span>RUN TRANSLATION</span> <b>⌘ ↵</b></button>
+          </div>
+          <div class="code-grid">
+             <div class="code-panel">
+                <div class="panel-heading"><span><i class="dot dot-green"></i> source.input</span><div class="panel-tools"><select id="example-select" aria-label="Choose a code example"><option value="etl">ETL pipeline</option><option value="retry">Retry with backoff</option><option value="group">Group transactions</option><option value="cache">Memoized cache</option><option value="validate">Input validation</option></select><button class="mini-button" id="example-button" type="button">LOAD</button><input id="file-input" type="file" accept=".py,.js,.ts,.java,.go,.rs,.cpp,.cc,.c,.h,.hpp,.cs,.rb,.php,.swift,.kt,.kts,.html,.css,.sql,.sh,.txt" hidden><button class="mini-button upload-button" id="upload-button" type="button">UPLOAD FILE</button></div></div>
+               <textarea id="source-code" spellcheck="false" aria-label="Source code">def greet(name):
+    message = f"Hello, {name}!"
+    return message
+
+print(greet("Ada"))</textarea>
+               <p class="file-note" id="file-note">Paste code or upload a local text file. Files stay in your browser until translation.</p>
+             </div>
+            <div class="code-panel output-panel">
+               <div class="panel-heading"><span><i class="dot dot-orange"></i> target.output</span><div class="panel-tools"><button class="mini-button" id="copy-button" type="button">COPY</button><button class="mini-button" id="download-button" type="button">DOWNLOAD</button></div></div>
+              <pre id="target-code" aria-live="polite"><span class="output-placeholder">// translated code will appear here
+// your explanation will be included as comments</span></pre>
+            </div>
+          </div>
+           <div class="translation-progress" id="translation-progress" hidden><div class="progress-track"><div class="progress-fill" id="progress-fill"></div></div><span id="progress-label">PREPARING AI REQUEST</span></div>
+           <div class="status-line" id="translation-status"><span class="status-caret">▸</span> READY. Click RUN TRANSLATION to call the course AI model.</div>
+           <div class="test-toolbar"><button class="mini-button" id="tests-button" type="button">GENERATE TESTS</button><span id="tests-status">Generate target-language tests after translating.</span></div>
+           <pre class="test-output" id="test-output" hidden aria-live="polite"></pre>
+        </section>
+
+        <section class="workspace-panel quality-panel" aria-label="Translation quality report">
+          <div class="panel-heading large-heading"><span><i class="dot dot-green"></i> translation.audit</span><span class="live-label" id="audit-label">WAITING FOR OUTPUT</span></div>
+          <div class="quality-grid">
+            <div class="score-ring" id="quality-score"><strong>--</strong><span>SCORE / 100</span></div>
+            <div class="signal-list" id="quality-signals"><p class="empty-history">Run a translation to inspect behavior, coverage, and target-language fit.</p></div>
+            <div class="risk-list" id="risk-list"><p class="empty-history">Risky paths and fault lines will be called out here.</p></div>
+          </div>
+        </section>
+
+        <section class="lower-grid">
+          <div class="workspace-panel chat-panel">
+            <div class="panel-heading large-heading"><span><i class="dot dot-purple"></i> pair_programmer.chat</span></div>
+             <div class="chat-log" id="chat-log" aria-live="polite">
+               <div class="chat-message assistant"><span class="message-label">AI / 00:00</span><p>Paste your code and run a translation. I’ll explain the moves, not just change the syntax.</p></div>
+             </div>
+             <div class="suggested-questions" id="suggested-questions" aria-label="Suggested questions"></div>
+            <form class="chat-form" id="chat-form">
+              <label class="sr-only" for="chat-input">Ask about the generated code</label>
+              <input id="chat-input" type="text" placeholder="Ask about the generated code..." autocomplete="off">
+              <button type="submit" aria-label="Send chat message">↗</button>
+            </form>
+          </div>
+           <aside class="info-panel pulse-panel" aria-label="Code pulse">
+             <div class="pulse-heading">
+               <p class="eyebrow">CODE PULSE</p>
+             </div>
+             <p class="pulse-title">A quick read on the code you’re about to move.</p>
+             <div class="pulse-route"><span id="pulse-source">PYTHON</span><b>→</b><span id="pulse-target">C++</span></div>
+             <div class="pulse-stats">
+               <div><strong id="pulse-lines">04</strong><span>LINES</span></div>
+               <div><strong id="pulse-tokens">12</strong><span>WORDS</span></div>
+               <div><strong id="pulse-complexity">LOW</strong><span>WEIGHT</span></div>
+             </div>
+             <p class="pulse-tip"><span>⌘ ↵</span> to translate instantly</p>
+             <p class="attribution">Sample project developed for <a href="https://www.cs.ubc.ca/~kevinlb/teaching/ai100/" target="_blank" rel="noreferrer">UBC’s AI 100: Introduction to Artificial Intelligence</a> course.</p>
+           </aside>
+        </section>
+        <section class="workspace-panel history-panel" aria-label="Translation history">
+          <div class="panel-heading large-heading"><span><i class="dot dot-orange"></i> translation.history</span><span class="live-label" id="history-count">0 SAVED</span></div>
+          <div class="history-list" id="history-list"><p class="empty-history">Completed translations will appear here.</p></div>
+        </section>
+      </main>
+    </div>
+    <div id="app-error" class="app-error" role="alert" aria-live="assertive" hidden></div>
+
+    <script id="gizmoapp-config" type="application/json">{{ client_config | tojson }}</script>
+    <script src="{{ shared_asset_base }}boot.js"></script>
+    <script type="module" src="{{ asset_base }}main.js"></script>
+  </body>
+</html>
